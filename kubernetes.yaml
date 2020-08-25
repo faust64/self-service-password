@@ -66,7 +66,6 @@ metadata:
   name: ssp-demo
 data:
   virtualhost.conf: |
-    Listen 8080
     ServerName ssp.demo.local
     <VirtualHost *:8080>
       ServerName ssp.demo.local
@@ -81,46 +80,6 @@ data:
         Require all granted
       </Directory>
     </VirtualHost>
-  apache2.conf: |
-    DefaultRuntimeDir ${APACHE_RUN_DIR}
-    PidFile ${APACHE_PID_FILE}
-    Timeout 300
-    KeepAlive On
-    MaxKeepAliveRequests 100
-    KeepAliveTimeout 5
-    User ${APACHE_RUN_USER}
-    Group ${APACHE_RUN_GROUP}
-    HostnameLookups Off
-    ErrorLog /dev/stderr
-    LogLevel warn
-    IncludeOptional mods-enabled/*.load
-    IncludeOptional mods-enabled/*.conf
-    <Directory />
-      Options FollowSymLinks
-      AllowOverride None
-      Require all denied
-    </Directory>
-    <Directory /usr/share>
-      AllowOverride None
-      Require all granted
-    </Directory>
-    <Directory /var/www/>
-      Options Indexes FollowSymLinks
-      AllowOverride None
-      Require all granted
-    </Directory>
-    AccessFileName .htaccess
-    <FilesMatch "^\.ht">
-      Require all denied
-    </FilesMatch>
-    LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
-    LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
-    LogFormat "%h %l %u %t \"%r\" %>s %O" common
-    LogFormat "%{Referer}i -> %U" referer
-    LogFormat "%{User-agent}i" agent
-    IncludeOptional conf-enabled/*.conf
-    IncludeOptional sites-enabled/*.conf
-    TransferLog /dev/stdout
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -183,30 +142,20 @@ spec:
           timeoutSeconds: 4
         resources:
           limits:
-            cpu: 200m
+            cpu: 100m
             memory: 320Mi
           requests:
-            cpu: 100m
+            cpu: 50m
             memory: 256Mi
         volumeMounts:
-        - mountPath: /etc/apache2/apache2.conf
-          name: apache-config
-          subPath: apache2.conf
         - mountPath: /etc/apache2/sites-available/000-default.conf
           name: apache-config
           subPath: virtualhost.conf
         - mountPath: /var/www/html/conf/config.inc.local.php
           name: ssp-config
           subPath: config.php
-        - mountPath: /run/apache2
-          name: tmp
-          subPath: run
         - mountPath: /var/www/templates_c
           name: tmp
-          subPath: site
-        - mountPath: /var/log/apache2
-          name: tmp
-          subPath: logs
       securityContext:
         runAsUser: 1000
       volumes:

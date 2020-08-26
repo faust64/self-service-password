@@ -131,6 +131,18 @@ You can turn on debug mode with ``$debug``:
 
    $debug = true;
 
+You may configure PHP logs output:
+
+.. code:: php
+
+   $log_messages_to = 'php://stderr';
+
+As well as PHP log level:
+
+.. code:: php
+
+   $log_severity = 'debug';
+
 Security
 --------
 

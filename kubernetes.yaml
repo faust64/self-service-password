@@ -151,7 +151,7 @@ spec:
         - mountPath: /etc/apache2/sites-available/000-default.conf
           name: apache-config
           subPath: virtualhost.conf
-        - mountPath: /var/www/html/conf/config.inc.local.php
+        - mountPath: /var/www/conf/config.inc.local.php
           name: ssp-config
           subPath: config.php
         - mountPath: /var/www/templates_c

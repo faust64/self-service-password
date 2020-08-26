@@ -58,6 +58,7 @@ You can set all parameters for PHPMailer:
    $mail_smtp_autotls = true;
    $mail_smtp_options = array();
    $mail_contenttype = 'text/plain';
+   $mail_hello_from = 'my-fqdn.example.com';
    $mail_wordwrap = 0;
    $mail_charset = 'utf-8';
    $mail_priority = 3;

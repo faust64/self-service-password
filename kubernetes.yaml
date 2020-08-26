@@ -28,6 +28,7 @@ stringData:
     $mail_smtp_secure = '';
     $mail_smtp_autotls = true;
     $mail_contenttype = 'text/plain';
+    $mail_hello_from = isset($_ENV['SMTP_HELO']) ? $_ENV['SMTP_HELO'] : false;
     $messages['passwordchangedextramessage'] = NULL;
     $messages['changehelpextramessage'] = NULL;
     $keyphrase = "secret-kube";
@@ -146,7 +147,12 @@ spec:
                 - ssp-demo
             topologyKey: kubernetes.io/hostname
       containers:
-      - image: registry.registry.svc.cluster.local:5000/NAMESPACE/ssp:BRANCH
+      - env:
+        - name: SMTP_HELO
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: registry.registry.svc.cluster.local:5000/NAMESPACE/ssp:BRANCH
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 15

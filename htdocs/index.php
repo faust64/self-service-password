@@ -101,6 +101,9 @@ $mailer->SMTPKeepAlive = $mail_smtp_keepalive;
 $mailer->SMTPOptions   = $mail_smtp_options;
 $mailer->Timeout       = $mail_smtp_timeout;
 $mailer->LE            = $mail_newline;
+if ($mail_hello_from !== false) {
+    $mailer->hello($mail_hello_from);
+}
 
 #==============================================================================
 # Other default values

@@ -33,11 +33,6 @@ COPY . /var/www
 RUN rmdir /var/www/html && \
     mv /var/www/htdocs /var/www/html && \
     mkdir -p /var/www/templates_c && \
-    chown -R www-data: /var/www/templates_c && \
-    if test "$WITH_PHPUNIT"; then \
-	curl -o /usr/bin/phpunit -fsL https://phar.phpunit.de/phpunit-5.7.phar && \
-	chown root:root /usr/bin/phpunit && \
-	chmod 755 /usr/bin/phpunit; \
-    fi
+    chown -R www-data: /var/www/templates_c
 ENV LC_CTYPE=en_US.UTF-8
 EXPOSE 80

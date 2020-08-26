@@ -28,10 +28,14 @@ stringData:
     $mail_smtp_secure = '';
     $mail_smtp_autotls = true;
     $mail_contenttype = 'text/plain';
+    $messages['passwordchangedextramessage'] = NULL;
+    $messages['changehelpextramessage'] = NULL;
     $keyphrase = "secret-kube";
     $prehook = "/usr/bin/prehook.sh";
     $posthook = "/usr/bin/posthook.sh";
-    $reset_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://" . $_SERVER['HTTP_X_FORWARDED_HOST'] . $_SERVER['SCRIPT_NAME'];
+    $my_proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'http';
+    $my_host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : 'localhost';
+    $reset_url = $my_proto . "://" . $my_host . $_SERVER['SCRIPT_NAME'];
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -136,7 +140,7 @@ spec:
             cpu: 50m
             memory: 256Mi
         volumeMounts:
-        - mountPath: /etc/apache2/sites-available/000-default.conf
+        - mountPath: /etc/apache2/sites-enabled/000-default.conf
           name: apache-config
           subPath: virtualhost.conf
         - mountPath: /usr/bin/prehook.sh

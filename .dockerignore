@@ -1,4 +1,4 @@
- conf/config.inc.local.php
+conf/config.inc.local.php
 .git
 github-issues-to-changelog.pl
 packaging

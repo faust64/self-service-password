@@ -28,6 +28,8 @@ stringData:
     $mail_smtp_secure = '';
     $mail_smtp_autotls = true;
     $mail_contenttype = 'text/plain';
+    $messages['passwordchangedextramessage'] = NULL;
+    $messages['changehelpextramessage'] = NULL;
     $keyphrase = "secret-kube";
     $prehook = "/usr/bin/prehook.sh";
     $posthook = "/usr/bin/posthook.sh";
@@ -181,7 +183,7 @@ spec:
         - mountPath: /etc/apache2/apache2.conf
           name: apache-config
           subPath: apache2.conf
-        - mountPath: /etc/apache2/sites-available/000-default.conf
+        - mountPath: /etc/apache2/sites-enabled/000-default.conf
           name: apache-config
           subPath: virtualhost.conf
         - mountPath: /run/apache2

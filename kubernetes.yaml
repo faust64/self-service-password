@@ -31,7 +31,9 @@ stringData:
     $keyphrase = "secret-kube";
     $prehook = "/usr/bin/prehook.sh";
     $posthook = "/usr/bin/posthook.sh";
-    $reset_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://" . $_SERVER['HTTP_X_FORWARDED_HOST'] . $_SERVER['SCRIPT_NAME'];
+    $my_proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'http';
+    $my_host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : 'localhost';
+    $reset_url = $my_proto . "://" . $my_host . $_SERVER['SCRIPT_NAME'];
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -10,12 +10,16 @@ RUN buildDeps=" \
         libicu-dev \
         libldap2-dev \
         libzip-dev \
+	locales \
+	locales-all \
     " \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $buildDeps $runtimeDeps \
     && docker-php-ext-install bcmath bz2 iconv intl mbstring opcache curl \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install ldap \
     && pecl install psr-1.0.0 \
+    && echo en_US.UTF-8 UTF-8 >/etc/locale.gen \
+    && /usr/sbin/locale-gen \
     && echo extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/psr.so \
 	>/usr/local/etc/php/conf.d/psr.ini \
     && apt-get purge -y --auto-remove $buildDeps \
@@ -31,9 +35,9 @@ RUN rmdir /var/www/html && \
     mkdir -p /var/www/templates_c && \
     chown -R www-data: /var/www/templates_c && \
     if test "$WITH_PHPUNIT"; then \
-	curl -o /usr/bin/phpunit -fsL https://phar.phpunit.de/phpunit-8.phar && \
+	curl -o /usr/bin/phpunit -fsL https://phar.phpunit.de/phpunit-5.7.phar && \
 	chown root:root /usr/bin/phpunit && \
 	chmod 755 /usr/bin/phpunit; \
     fi
-
+ENV LC_CTYPE=en_US.UTF-8
 EXPOSE 80

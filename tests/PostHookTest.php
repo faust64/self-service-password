@@ -1,9 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../lib/logger.php';
-$log = new myLogger('/dev/null');
-
-class PostHookTest extends \PHPUnit\Framework\TestCase
+class PostHookTest extends \PHPUnit_Framework_TestCase
 {
     public function testCommand()
     {

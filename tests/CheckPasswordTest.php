@@ -1,10 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../lib/vendor/defuse-crypto.phar';
-require_once __DIR__ . '/../lib/logger.php';
-$log = new myLogger('/dev/null');
 
-class CheckPasswordTest extends \PHPUnit\Framework\TestCase
+class CheckPasswordTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test check_password_strength function

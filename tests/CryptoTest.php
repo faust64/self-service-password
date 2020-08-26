@@ -1,12 +1,19 @@
 <?php
 
+global $log;
 require_once __DIR__ . '/../lib/vendor/defuse-crypto.phar';
 require_once __DIR__ . '/../lib/functions.inc.php';
 require_once __DIR__ . '/../lib/logger.php';
-$log = new myLogger('/dev/null');
 
-class CryptoTest extends \PHPUnit\Framework\TestCase
+class CryptoTest extends \PHPUnit_Framework_TestCase
 {
+    protected $_mylog;
+    public function __construct() {
+	global $log;
+        $log = new myLogger('php://stdout', 'emergency');
+	$this->_mylog = $log;
+    }
+
     /**
      * Test encrypt and decrypt functions
      */
@@ -39,6 +46,8 @@ class CryptoTest extends \PHPUnit\Framework\TestCase
      */
     public function testDecryptionWithIncorrectTokenGivesEmptyString()
     {
+	global $log;
+	$log = $this->_mylog;
         // second encrypt use case : session_id
         $plaintext1 = "azAZ09,-";
         $passphrase = "secret";

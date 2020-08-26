@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../lib/vendor/autoload.php';
 
-class ReCaptchaTest extends \PHPUnit\Framework\TestCase
+class ReCaptchaTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Verifies that alternative request method is available (for $recaptcha_request_method in config)

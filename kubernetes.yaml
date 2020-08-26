@@ -15,10 +15,11 @@ stringData:
     $ldap_login_attribute = "uid";
     $ldap_fullname_attribute = "cn";
     $ldap_filter = "(&(objectClass=person)($ldap_login_attribute={login}))";
+    $use_change = true;
     $who_change_password = "user";
     $mail_from = "no-reply@DOMAIN";
     $mail_from_name = "Self Service Password";
-    $mail_debug_format = 'html';
+    $mail_smtp_debug = true;
     $mail_smtp_host = 'smtp.demo.local';
     $mail_smtp_auth = false;
     $mail_smtp_user = '';

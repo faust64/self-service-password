@@ -74,7 +74,7 @@ data:
       DocumentRoot /var/www/html
       ErrorLog ${APACHE_LOG_DIR}/error.log
       CustomLog /dev/stdout common
-      Alias /favicon.ico /usr/share/self-service-password/images/favicon.ico
+      Alias /favicon.ico /var/www/html/images/favicon.ico
       DirectoryIndex index.php
       <Directory /var/www/html>
         AllowOverride None

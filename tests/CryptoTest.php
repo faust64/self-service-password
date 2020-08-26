@@ -2,8 +2,10 @@
 
 require_once __DIR__ . '/../lib/vendor/defuse-crypto.phar';
 require_once __DIR__ . '/../lib/functions.inc.php';
+require_once __DIR__ . '/../lib/logger.php';
+$log = new myLogger('/dev/null');
 
-class CryptoTest extends \PHPUnit_Framework_TestCase
+class CryptoTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test encrypt and decrypt functions

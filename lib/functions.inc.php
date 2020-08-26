@@ -455,8 +455,9 @@ function change_password( $ldap, $dn, $password, $ad_mode, $ad_options, $samba_m
     $errno = ldap_errno($ldap);
 
     if ( $errno ) {
+	global $log;
         $result = "passworderror";
-        error_log("LDAP - Modify password error $errno (".ldap_error($ldap).")");
+        $log->error("LDAP - Modify password error $errno (".ldap_error($ldap).")");
     } else {
         $result = "passwordchanged";
     }
@@ -479,8 +480,9 @@ function change_sshkey( $ldap, $dn, $attribute, $sshkey ) {
     $errno = ldap_errno($ldap);
 
     if ( $errno ) {
+	global $log;
         $result = "sshkeyerror";
-        error_log("LDAP - Modify $attribute error $errno (".ldap_error($ldap).")");
+        $log->error("LDAP - Modify $attribute error $errno (".ldap_error($ldap).")");
     } else {
         $result = "sshkeychanged";
     }
@@ -509,7 +511,8 @@ function decrypt($data, $keyphrase) {
     try {
         return \Defuse\Crypto\Crypto::decryptWithPassword(base64_decode($data), $keyphrase, true);
     } catch (\Defuse\Crypto\Exception\CryptoException $e) {
-        error_log("crypto: decryption error " . $e->getMessage());
+	global $log;
+        $log->error("crypto: decryption error " . $e->getMessage());
         return '';
     }
 }
@@ -526,15 +529,16 @@ function decrypt($data, $keyphrase) {
  */
 function send_mail($mailer, $mail, $mail_from, $mail_from_name, $subject, $body, $data) {
 
+    global $log;
     $result = false;
 
     if(!is_a($mailer, 'PHPMailer')) {
-        error_log("send_mail: PHPMailer object required!");
+        $log->error("send_mail: PHPMailer object required!");
         return $result;
     }
 
     if (!$mail) {
-        error_log("send_mail: no mail given, exiting...");
+        $log->error("send_mail: no mail given, exiting...");
         return $result;
     }
 
@@ -555,7 +559,7 @@ function send_mail($mailer, $mail, $mail_from, $mail_from_name, $subject, $body,
     $result = $mailer->send();
 
     if (!$result) {
-        error_log("send_mail: ".$mailer->ErrorInfo);
+        $log->error("send_mail: ".$mailer->ErrorInfo);
     }
 
     return $result;
@@ -570,19 +574,20 @@ function send_mail($mailer, $mail, $mail_from, $mail_from_name, $subject, $body,
  * @return $result
  */
 function check_username_validity($username,$login_forbidden_chars) {
+    global $log;
     $result = "";
 
     if (!$login_forbidden_chars) {
         if (!ctype_alnum($username)) {
             $result = "badcredentials";
-            error_log("Non alphanumeric characters in username $username");
+            $log->error("Non alphanumeric characters in username $username");
         }
     }
     else {
         preg_match_all("/[$login_forbidden_chars]/", $username, $forbidden_res);
         if (count($forbidden_res[0])) {
             $result = "badcredentials";
-            error_log("Illegal characters in username $username (list of forbidden characters: $login_forbidden_chars)");
+            $log->error("Illegal characters in username $username (list of forbidden characters: $login_forbidden_chars)");
         }
     }
 
@@ -602,9 +607,10 @@ function check_recaptcha($recaptcha_privatekey, $recaptcha_request_method, $resp
     $resp = $recaptcha->verify($response, $_SERVER['REMOTE_ADDR']);
 
     if (!$resp->isSuccess()) {
-        error_log("Bad reCAPTCHA attempt with user $login");
+	global $log;
+        $log->error("Bad reCAPTCHA attempt with user $login");
         foreach ($resp->getErrorCodes() as $code) {
-            error_log("reCAPTCHA error: $code");
+            $log->error("reCAPTCHA error: $code");
         }
         return 'badcaptcha';
     }

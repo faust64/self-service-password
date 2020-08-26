@@ -39,14 +39,14 @@
  * @return 1 if message sent, 0 if not
  */
 function send_sms_by_api($mobile, $message) {
-    global $twilio_sid, $twilio_auth_token, $twilio_outgoing_number, $twilio_lookup_first;
+    global $twilio_sid, $twilio_auth_token, $twilio_outgoing_number, $twilio_lookup_first, $log;
     if (!$twilio_sid || !$twilio_auth_token) {
-      error_log('Trying to access twilio without credentials. Set twilio_sid and twilio_auth_token in your config.inc.local.php with values from https://www.twilio.com/console');
+      $log->error('Trying to access twilio without credentials. Set twilio_sid and twilio_auth_token in your config.inc.local.php with values from https://www.twilio.com/console');
       return 0;
     }
 
     if (!$twilio_outgoing_number) {
-      error_log('No outgoing twilio number, set twilio_outgoing_number in config.inc.local.php with values from https://www.twilio.com/console/phone-numbers/search');
+      $log->error('No outgoing twilio number, set twilio_outgoing_number in config.inc.local.php with values from https://www.twilio.com/console/phone-numbers/search');
       return 0;
     }
 
@@ -60,12 +60,12 @@ function send_sms_by_api($mobile, $message) {
       $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
       curl_close($ch);
       if ($http_code != "200") {
-        error_log("Error code $http_code from twilio: $response");
+        $log->error("Error code $http_code from twilio: $response");
         return 0;
       }
       $json = json_decode($response, true);
       if (@$json['code'] || @$json['message']) {
-        error_log("Error from twilio: $response");
+        $log->error("Error from twilio: $response");
         return 0;
       }
 
@@ -87,12 +87,12 @@ function send_sms_by_api($mobile, $message) {
     $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
     curl_close($ch);
     if ($http_code != "200" && $http_code != "201") {
-      error_log("Error code $http_code from twilio: $response");
+      $log->error("Error code $http_code from twilio: $response");
       return 0;
     }
     $json = json_decode($response, true);
     if (@$json['code'] || @$json['message']) {
-      error_log("Error from twilio: $response");
+      $log->error("Error from twilio: $response");
       return 0;
     }
 

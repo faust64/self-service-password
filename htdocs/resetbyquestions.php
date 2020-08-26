@@ -36,6 +36,7 @@ $userdn = "";
 if (!isset($pwd_forbidden_chars)) { $pwd_forbidden_chars=""; }
 $mail = "";
 $extended_error_msg = "";
+global $log;
 
 if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = strval($_POST["confirmpassword"]); }
  else { $result = "confirmpasswordrequired"; }
@@ -73,7 +74,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
     # Bind
@@ -87,7 +88,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-            error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+            $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -98,7 +99,7 @@ if ( $result === "" ) {
     $errno = ldap_errno($ldap);
     if ( $errno ) {
         $result = "ldaperror";
-        error_log("LDAP - Search error $errno (".ldap_error($ldap).")");
+        $log->error("LDAP - Search error $errno (".ldap_error($ldap).")");
     } else {
 
     # Get user DN
@@ -107,7 +108,7 @@ if ( $result === "" ) {
 
     if( !$userdn ) {
         $result = "badcredentials";
-        error_log("LDAP - User $login not found");
+        $log->error("LDAP - User $login not found");
     } else {
 
     # Check objectClass to allow samba and shadow updates
@@ -148,7 +149,7 @@ if ( $result === "" ) {
 
     if (!$match) {
         $result = "answernomatch";
-        error_log("Answer does not match question for user $login");
+        $log->error("Answer does not match question for user $login");
     }
 
     $entry = ldap_get_attributes($ldap, $entry);
@@ -189,6 +190,6 @@ if ($result === "") {
 if ($mail and $notify_on_change and $result === 'paswordchanged') {
     $data = array( "login" => $login, "mail" => $mail, "password" => $newpassword);
     if ( !send_mail($mailer, $mail, $mail_from, $mail_from_name, $messages["changesubject"], $messages["changemessage"].$mail_signature, $data) ) {
-        error_log("Error while sending change email to $mail (user $login)");
+        $log->error("Error while sending change email to $mail (user $login)");
     }
 }

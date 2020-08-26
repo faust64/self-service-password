@@ -36,6 +36,7 @@ $userdn = "";
 if (!isset($pwd_forbidden_chars)) { $pwd_forbidden_chars=""; }
 $mail = "";
 $extended_error_msg = "";
+global $log;
 
 if (isset($_REQUEST["token"]) and $_REQUEST["token"]) { $token = strval($_REQUEST["token"]); }
  else { $result = "tokenrequired"; }
@@ -69,14 +70,14 @@ if ( $result === "" ) {
 
     if ( !$login ) {
         $result = "tokennotvalid";
-	error_log("Unable to open session $tokenid");
+	$log->error("Unable to open session $tokenid");
     } else {
         if (isset($token_lifetime)) {
             # Manage lifetime with session content
             $tokentime = $_SESSION['time'];
             if ( time() - $tokentime > $token_lifetime ) {
                 $result = "tokennotvalid";
-                error_log("Token lifetime expired");
+                $log->error("Token lifetime expired");
 	        }
         }
     }
@@ -111,7 +112,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
         # Bind
@@ -125,7 +126,7 @@ if ( $result === "" ) {
             $result = "ldaperror";
             $errno = ldap_errno($ldap);
             if ( $errno ) {
-                error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+                $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
             }
         } else {
 
@@ -136,7 +137,7 @@ if ( $result === "" ) {
             $errno = ldap_errno($ldap);
             if ( $errno ) {
                 $result = "ldaperror";
-                error_log("LDAP - Search error $errno (".ldap_error($ldap).")");
+                $log->error("LDAP - Search error $errno (".ldap_error($ldap).")");
             } else {
 
                 # Get user DN
@@ -145,7 +146,7 @@ if ( $result === "" ) {
 
                 if( !$userdn ) {
                     $result = "badcredentials";
-                    error_log("LDAP - User $login not found");
+                    $log->error("LDAP - User $login not found");
                 }
 
                 # Check objectClass to allow samba and shadow updates
@@ -209,6 +210,6 @@ if ( $result === "passwordchanged" ) {
 if ($mail and $notify_on_change and $result === 'paswordchanged') {
     $data = array( "login" => $login, "mail" => $mail, "password" => $newpassword);
     if ( !send_mail($mailer, $mail, $mail_from, $mail_from_name, $messages["changesubject"], $messages["changemessage"].$mail_signature, $data) ) {
-        error_log("Error while sending change email to $mail (user $login)");
+        $log->error("Error while sending change email to $mail (user $login)");
     }
 }

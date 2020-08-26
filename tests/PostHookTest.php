@@ -1,6 +1,9 @@
 <?php
 
-class PostHookTest extends \PHPUnit_Framework_TestCase
+require_once __DIR__ . '/../lib/logger.php';
+$log = new myLogger('/dev/null');
+
+class PostHookTest extends \PHPUnit\Framework\TestCase
 {
     public function testCommand()
     {

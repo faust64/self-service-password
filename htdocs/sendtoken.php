@@ -32,6 +32,7 @@ $ldap = "";
 $userdn = "";
 $token = "";
 $usermail = "";
+global $log;
 
 if (!$mail_address_use_ldap) {
     if (isset($_POST["mail"]) and $_POST["mail"]) {
@@ -73,7 +74,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
     # Bind
@@ -87,7 +88,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-            error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+            $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -98,7 +99,7 @@ if ( $result === "" ) {
     $errno = ldap_errno($ldap);
     if ( $errno ) {
         $result = "ldaperror";
-        error_log("LDAP - Search error $errno (".ldap_error($ldap).")");
+        $log->error("LDAP - Search error $errno (".ldap_error($ldap).")");
     } else {
 
     # Get user DN
@@ -107,7 +108,7 @@ if ( $result === "" ) {
 
     if( !$userdn ) {
         $result = "badcredentials";
-        error_log("LDAP - User $login not found");
+        $log->error("LDAP - User $login not found");
     } else {
 
     # Compare mail values
@@ -140,10 +141,10 @@ if ( $result === "" ) {
     if (!$match) {
         if (!$mail_address_use_ldap) {
             $result = "mailnomatch";
-            error_log("Mail $mail does not match for user $login");
+            $log->error("Mail $mail does not match for user $login");
         } else {
             $result = "mailnomatch";
-            error_log("Mail not found for user $login");
+            $log->error("Mail not found for user $login");
         }
     }
 
@@ -199,9 +200,9 @@ if ( $result === "" ) {
     $reset_url .= "?action=resetbytoken&token=".urlencode($token);
 
     if ( !empty($reset_request_log) ) {
-        error_log("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") . "\n\n", 3, $reset_request_log);
+        $log->error("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") . "\n\n", 3, $reset_request_log);
     } else {
-        error_log("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN"));
+        $log->error("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN"));
     }
 
     $data = array( "login" => $login, "mail" => $mail, "url" => $reset_url ) ;
@@ -211,6 +212,6 @@ if ( $result === "" ) {
         $result = "tokensent";
     } else {
         $result = "tokennotsent";
-        error_log("Error while sending token to $mail (user $login)");
+        $log->error("Error while sending token to $mail (user $login)");
     }
 }

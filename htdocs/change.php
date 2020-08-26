@@ -35,6 +35,7 @@ $userdn = "";
 if (!isset($pwd_forbidden_chars)) { $pwd_forbidden_chars=""; }
 $mail = "";
 $extended_error_msg = "";
+global $log;
 
 if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = strval($_POST["confirmpassword"]); }
  else { $result = "confirmpasswordrequired"; }
@@ -73,7 +74,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
     # Bind
@@ -87,7 +88,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-	    error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+	    $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -98,7 +99,7 @@ if ( $result === "" ) {
     $errno = ldap_errno($ldap);
     if ( $errno ) {
         $result = "ldaperror";
-        error_log("LDAP - Search error $errno  (".ldap_error($ldap).")");
+        $log->error("LDAP - Search error $errno  (".ldap_error($ldap).")");
     } else {
 
     # Get user DN
@@ -107,7 +108,7 @@ if ( $result === "" ) {
 
     if( !$userdn ) {
         $result = "badcredentials";
-        error_log("LDAP - User $login not found");
+        $log->error("LDAP - User $login not found");
     } else {
 
     # Get user email for notification
@@ -137,18 +138,18 @@ if ( $result === "" ) {
         $result = "badcredentials";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-            error_log("LDAP - Bind user error $errno  (".ldap_error($ldap).")");
+            $log->error("LDAP - Bind user error $errno  (".ldap_error($ldap).")");
         }
         if ( ($errno == 49) && $ad_mode ) {
             if ( ldap_get_option($ldap, 0x0032, $extended_error) ) {
-                error_log("LDAP - Bind user extended_error $extended_error  (".ldap_error($ldap).")");
+                $log->error("LDAP - Bind user extended_error $extended_error  (".ldap_error($ldap).")");
                 $extended_error = explode(', ', $extended_error);
                 if ( strpos($extended_error[2], '773') or strpos($extended_error[0], 'NT_STATUS_PASSWORD_MUST_CHANGE') ) {
-                    error_log("LDAP - Bind user password needs to be changed");
+                    $log->error("LDAP - Bind user password needs to be changed");
                     $result = "";
                 }
                 if ( ( strpos($extended_error[2], '532') or strpos($extended_error[0], 'NT_STATUS_ACCOUNT_EXPIRED') ) and $ad_options['change_expired_password'] ) {
-                    error_log("LDAP - Bind user password is expired");
+                    $log->error("LDAP - Bind user password is expired");
                     $result = "";
                 }
                 unset($extended_error);
@@ -196,7 +197,7 @@ if ($result === "passwordchanged") {
     if ($mail and $notify_on_change) {
         $data = array( "login" => $login, "mail" => $mail, "password" => $newpassword);
         if ( !send_mail($mailer, $mail, $mail_from, $mail_from_name, $messages["changesubject"], $messages["changemessage"].$mail_signature, $data) ) {
-            error_log("Error while sending change email to $mail (user $login)");
+            $log->error("Error while sending change email to $mail (user $login)");
         }
     }
 }

@@ -15,6 +15,9 @@ RUN buildDeps=" \
     && docker-php-ext-install bcmath bz2 iconv intl mbstring opcache curl \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install ldap \
+    && pecl install psr-1.0.0 \
+    && echo extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/psr.so \
+	>/usr/local/etc/php/conf.d/psr.ini \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -r /var/lib/apt/lists/* \
     && a2enmod rewrite
@@ -26,7 +29,11 @@ COPY . /var/www
 RUN rmdir /var/www/html && \
     mv /var/www/htdocs /var/www/html && \
     mkdir -p /var/www/templates_c && \
-    chown -R www-data: /var/www/templates_c
+    chown -R www-data: /var/www/templates_c && \
+    if test "$WITH_PHPUNIT"; then \
+	curl -o /usr/bin/phpunit -fsL https://phar.phpunit.de/phpunit-8.phar && \
+	chown root:root /usr/bin/phpunit && \
+	chmod 755 /usr/bin/phpunit; \
+    fi
 
 EXPOSE 80
-

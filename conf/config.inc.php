@@ -335,6 +335,13 @@ $default_action = "change";
 # The name of an HTTP Header that may hold a reference to an extra config file to include.
 #$header_name_extra_config="SSP-Extra-Config";
 
+# Monolog configuration
+$log_messages_to = 'php://stderr';
+#$log_messages_to = '/dev/null';
+#$log_messages_to = '/var/log/httpd/self-service-password_php.log';
+# valid values: emergency/alert/critical/error/warning/info/debug
+$log_severity = 'info';
+
 # Allow to override current settings with local configuration
 if (file_exists (__DIR__ . '/config.inc.local.php')) {
     require __DIR__ . '/config.inc.local.php';

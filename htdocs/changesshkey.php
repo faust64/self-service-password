@@ -32,6 +32,7 @@ $sshkey = "";
 $ldap = "";
 $userdn = "";
 $mail = "";
+global $log;
 
 if (isset($_POST["password"]) and $_POST["password"]) { $password = strval($_POST["password"]); }
  else { $result = "passwordrequired"; }
@@ -65,7 +66,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
     # Bind
@@ -79,7 +80,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-            error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+            $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -90,7 +91,7 @@ if ( $result === "" ) {
     $errno = ldap_errno($ldap);
     if ( $errno ) {
         $result = "ldaperror";
-        error_log("LDAP - Search error $errno  (".ldap_error($ldap).")");
+        $log->error("LDAP - Search error $errno  (".ldap_error($ldap).")");
     } else {
 
     # Get user DN
@@ -99,7 +100,7 @@ if ( $result === "" ) {
 
     if( !$userdn ) {
         $result = "badcredentials";
-        error_log("LDAP - User $login not found");
+        $log->error("LDAP - User $login not found");
     } else {
 
     # Get user email for notification
@@ -116,7 +117,7 @@ if ( $result === "" ) {
         $result = "badcredentials";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-           error_log("LDAP - Bind user error $errno  (".ldap_error($ldap).")");
+           $log->error("LDAP - Bind user error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -143,6 +144,6 @@ if ( $result === "" ) {
 if ($mail and $notify_on_sshkey_change) {
     $data = array( "login" => $login, "mail" => $mail, "sshkey" => $sshkey);
     if ( !send_mail($mailer, $mail, $mail_from, $mail_from_name, $messages["changesshkeysubject"], $messages["changesshkeymessage"].$mail_signature, $data) ) {
-        error_log("Error while sending change email to $mail (user $login)");
+        $log->error("Error while sending change email to $mail (user $login)");
     }
 }

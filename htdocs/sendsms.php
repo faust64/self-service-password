@@ -34,6 +34,7 @@ $smstoken = "";
 $token = "";
 $sessiontoken = "";
 $attempts = 0;
+global $log;
 
 if (!$crypt_tokens) {
     $result = "crypttokensrequired";
@@ -63,23 +64,23 @@ if (!$crypt_tokens) {
 
     if ( !$login or !$sessiontoken) {
         $result = "tokennotvalid";
-        error_log("Unable to open session $smstokenid");
+        $log->error("Unable to open session $smstokenid");
     } elseif ($sessiontoken != $smstoken) {
     	if ($attempts < $max_attempts) {
 	    $_SESSION['attempts'] = $attempts + 1;
 	    $result = "tokenattempts";
-	    error_log("SMS token $smstoken not valid, attempt $attempts");
+	    $log->error("SMS token $smstoken not valid, attempt $attempts");
 	}
 	else {
  	    $result = "tokennotvalid";
-	    error_log("SMS token $smstoken not valid");
+	    $log->error("SMS token $smstoken not valid");
 	}
     } elseif (isset($token_lifetime)) {
         # Manage lifetime with session content
         $tokentime = $_SESSION['time'];
         if ( time() - $tokentime > $token_lifetime ) {
             $result = "tokennotvalid";
-            error_log("Token lifetime expired");
+            $log->error("Token lifetime expired");
         }
     }
     # Delete token if not valid or all is ok
@@ -125,7 +126,7 @@ if ( $result === "" ) {
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if ( $ldap_starttls && !ldap_start_tls($ldap) ) {
         $result = "ldaperror";
-        error_log("LDAP - Unable to use StartTLS");
+        $log->error("LDAP - Unable to use StartTLS");
     } else {
 
     # Bind
@@ -139,7 +140,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         $errno = ldap_errno($ldap);
         if ( $errno ) {
-            error_log("LDAP - Bind error $errno  (".ldap_error($ldap).")");
+            $log->error("LDAP - Bind error $errno  (".ldap_error($ldap).")");
         }
     } else {
 
@@ -150,7 +151,7 @@ if ( $result === "" ) {
     $errno = ldap_errno($ldap);
     if ( $errno ) {
         $result = "ldaperror";
-        error_log("LDAP - Search error $errno (".ldap_error($ldap).")");
+        $log->error("LDAP - Search error $errno (".ldap_error($ldap).")");
     } else {
 
     # Get user DN
@@ -159,7 +160,7 @@ if ( $result === "" ) {
 
     if( !$userdn ) {
         $result = "badcredentials";
-        error_log("LDAP - User $login not found");
+        $log->error("LDAP - User $login not found");
     }
 
     # Get sms values
@@ -178,7 +179,7 @@ if ( $result === "" ) {
 
     if ( !$sms ) {
         $result = "smsnonumber";
-        error_log("No SMS number found for user $login");
+        $log->error("No SMS number found for user $login");
     } else {
         $displayname = ldap_get_values($ldap, $entry, $ldap_fullname_attribute);
         $encrypted_sms_login = encrypt("$sms:$login", $keyphrase);
@@ -219,13 +220,13 @@ if ( $result === "sendsms" ) {
             $token  = encrypt(session_id(), $keyphrase);
             $result = "smssent";
             if ( !empty($reset_request_log) ) {
-                error_log("Send SMS code $smstoken by $sms_method to $sms\n\n", 3, $reset_request_log);
+                $log->error("Send SMS code $smstoken by $sms_method to $sms\n\n", 3, $reset_request_log);
             } else {
-                error_log("Send SMS code $smstoken by $sms_method to $sms");
+                $log->error("Send SMS code $smstoken by $sms_method to $sms");
             }
         } else {
             $result = "smsnotsent";
-            error_log("Error while sending sms by $sms_method to $sms (user $login)");
+            $log->error("Error while sending sms by $sms_method to $sms (user $login)");
         }
 
     }
@@ -233,7 +234,7 @@ if ( $result === "sendsms" ) {
     if ( $sms_method === "api" ) {
         if (!$sms_api_lib) {
             $result = "smsnotsent";
-            error_log('No API library found, set $sms_api_lib in configuration.');
+            $log->error('No API library found, set $sms_api_lib in configuration.');
         } else {
             include_once($sms_api_lib);
             $sms_message = str_replace('{smsresetmessage}', $messages['smsresetmessage'], $sms_message);
@@ -242,13 +243,13 @@ if ( $result === "sendsms" ) {
                 $token  = encrypt(session_id(), $keyphrase);
                 $result = "smssent";
                 if ( !empty($reset_request_log) ) {
-                    error_log("Send SMS code $smstoken by $sms_method to $sms\n\n", 3, $reset_request_log);
+                    $log->error("Send SMS code $smstoken by $sms_method to $sms\n\n", 3, $reset_request_log);
                 } else {
-                    error_log("Send SMS code $smstoken by $sms_method to $sms");
+                    $log->error("Send SMS code $smstoken by $sms_method to $sms");
                 }
             } else {
                 $result = "smsnotsent";
-                error_log("Error while sending sms by $sms_method to $sms (user $login)");
+                $log->error("Error while sending sms by $sms_method to $sms (user $login)");
             }
         }
     }
@@ -302,9 +303,9 @@ if ( $result === "redirect" ) {
     $reset_url .= "?action=resetbytoken&source=sms&token=".urlencode($token);
 
     if ( !empty($reset_request_log) ) {
-        error_log("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") . "\n\n", 3, $reset_request_log);
+        $log->error("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") . "\n\n", 3, $reset_request_log);
     } else {
-        error_log("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") );
+        $log->error("Send reset URL " . ( $debug ? "$reset_url" : "HIDDEN") );
     }
 
     # Redirect

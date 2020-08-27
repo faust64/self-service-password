@@ -154,8 +154,6 @@ spec:
           subPath: config.php
         - mountPath: /var/www/templates_c
           name: tmp
-      securityContext:
-        runAsUser: 1000
       volumes:
       - emptyDir: {}
         name: tmp

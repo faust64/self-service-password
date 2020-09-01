@@ -13,6 +13,8 @@ php:
 before_install:
   # If PHP >= 7.0, force use of PHPUnit 5.7
   - if php -r "exit( (int)! version_compare( '$TRAVIS_PHP_VERSION', '7.0', '>=' ) );"; then mkdir -p ~/bin && wget -O ~/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar && chmod +x ~/bin/phpunit; fi
+  # If PHP >= 7.0, we may use PSR. Otherwise ... tests would fail/FIXME
+  - if php -r "exit( (int)! version_compare( '$TRAVIS_PHP_VERSION', '7.0', '>=' ) );"; then sudo pecl install psr-1.0.0 && echo extension=psr.so | sudo tee -a `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`; fi
 
 script: phpunit tests
 

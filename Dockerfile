@@ -1,15 +1,16 @@
 FROM php:7.2-apache
-# Install PHP extensions and PECL modules.
+# Install PHP extensions
 RUN buildDeps=" \
-        libbz2-dev \
-        libsasl2-dev \
-        libcurl4-gnutls-dev \
+	libbz2-dev \
+	libcurl4-gnutls-dev \
+	libicu-dev \
+	libldap2-dev \
+	libsasl2-dev \
+	libzip-dev \
     " \
     runtimeDeps=" \
-        curl \
-        libicu-dev \
-        libldap2-dev \
-        libzip-dev \
+	curl \
+	ldap-utils \
 	locales \
 	locales-all \
     " \

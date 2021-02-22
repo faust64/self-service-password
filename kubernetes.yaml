@@ -1,0 +1,193 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ssp-demo
+stringData:
+  config.php: |
+    <?php
+    $debug = true;
+    $ldap_url = "ldap://openldap:1389";
+    $ldap_starttls = false;
+    $ldap_binddn = "cn=ssp,ou=services,dc=demo,dc=local";
+    $ldap_bindpw = "secret";
+    $ldap_base = "dc=demo,dc=local";
+    $ldap_login_attribute = "uid";
+    $ldap_fullname_attribute = "cn";
+    $ldap_filter = "(&(objectClass=person)($ldap_login_attribute={login}))";
+    $use_change = true;
+    $who_change_password = "user";
+    $mail_from = "no-reply@DOMAIN";
+    $mail_from_name = "Self Service Password";
+    $mail_smtp_debug = true;
+    $mail_smtp_host = 'smtp.demo.local';
+    $mail_smtp_auth = false;
+    $mail_smtp_user = '';
+    $mail_smtp_pass = '';
+    $mail_smtp_port = 25;
+    $mail_smtp_secure = '';
+    $mail_smtp_autotls = true;
+    $mail_contenttype = 'text/plain';
+    $messages['passwordchangedextramessage'] = NULL;
+    $messages['changehelpextramessage'] = NULL;
+    $keyphrase = "secret-kube";
+    $prehook = "/usr/bin/prehook.sh";
+    $posthook = "/usr/bin/posthook.sh";
+    $my_proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'http';
+    $my_host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : 'localhost';
+    $reset_url = $my_proto . "://" . $my_host . $_SERVER['SCRIPT_NAME'];
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ssp-demo
+data:
+  prehook.sh: |
+    #!/bin/sh -e
+    LOGIN=$1
+    NEWPASSWORD=$2
+    OLDPASSWORD=$3
+    echo "`date +%s` $LOGIN / $NEWPASSWORD / $OLDPASSWORD" >>/tmp/prehook.log
+    exit 0
+  posthook.sh: |
+    #!/bin/sh -e
+    LOGIN=$1
+    NEWPASSWORD=$2
+    OLDPASSWORD=$3
+    echo "`date +%s` $LOGIN / $NEWPASSWORD / $OLDPASSWORD" >>/tmp/posthook.log
+    exit 0
+  virtualhost.conf: |
+    Listen 8080
+    ServerName ssp.DOMAIN
+    <VirtualHost *:8080>
+      ServerName ssp.DOMAIN
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/html
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog /dev/stdout common
+      Alias /favicon.ico /var/www/html/images/favicon.ico
+      DirectoryIndex index.php
+      <Directory /var/www/html>
+        AllowOverride None
+        Require all granted
+      </Directory>
+    </VirtualHost>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: ssp-demo
+  name: ssp-demo
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      name: ssp-demo
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: ssp-demo
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - ssp-demo
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - image: registry.registry.svc.cluster.local:5000/NAMESPACE/ssp:BRANCH
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 15
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 8
+        name: ssp
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 4
+        resources:
+          limits:
+            cpu: 100m
+            memory: 320Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /etc/apache2/sites-enabled/000-default.conf
+          name: apache-config
+          subPath: virtualhost.conf
+        - mountPath: /usr/bin/prehook.sh
+          name: ssp-scripts
+          subPath: prehook.sh
+        - mountPath: /usr/bin/posthook.sh
+          name: ssp-scripts
+          subPath: posthook.sh
+        - mountPath: /var/www/conf/config.inc.local.php
+          name: ssp-config
+          subPath: config.php
+        - mountPath: /var/www/templates_c
+          name: tmp
+      volumes:
+      - emptyDir: {}
+        name: tmp
+      - configMap:
+          name: ssp-demo
+        name: apache-config
+      - secret:
+          secretName: ssp-demo
+        name: ssp-config
+      - configMap:
+          name: ssp-demo
+          defaultMode: 0777
+        name: ssp-scripts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssp-demo
+spec:
+  ports:
+  - name: tcp-8080
+    port: 8080
+  selector:
+    name: ssp-demo
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ssp-demo
+spec:
+  rules:
+  - host: ssp.DOMAIN
+    http:
+      paths:
+      - backend:
+          serviceName: ssp-demo
+          servicePort: 8080

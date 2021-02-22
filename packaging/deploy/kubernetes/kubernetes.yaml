@@ -17,10 +17,10 @@ stringData:
     $ldap_filter = "(&(objectClass=person)($ldap_login_attribute={login}))";
     $use_change = true;
     $who_change_password = "user";
-    $mail_from = "no-reply@DOMAIN";
+    $mail_from = "no-reply@example.com";
     $mail_from_name = "Self Service Password";
     $mail_smtp_debug = true;
-    $mail_smtp_host = 'smtp.demo.local';
+    $mail_smtp_host = 'smtp.example.com';
     $mail_smtp_auth = false;
     $mail_smtp_user = '';
     $mail_smtp_pass = '';
@@ -58,9 +58,9 @@ data:
     exit 0
   virtualhost.conf: |
     Listen 8080
-    ServerName ssp.DOMAIN
+    ServerName ssp.example.com
     <VirtualHost *:8080>
-      ServerName ssp.DOMAIN
+      ServerName ssp.example.com
       ServerAdmin webmaster@localhost
       DocumentRoot /var/www/html
       ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -106,7 +106,7 @@ spec:
                 - ssp-demo
             topologyKey: kubernetes.io/hostname
       containers:
-      - image: registry.registry.svc.cluster.local:5000/NAMESPACE/ssp:BRANCH
+      - image: registry.example.com/ssp:master
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 15
@@ -179,15 +179,17 @@ spec:
   selector:
     name: ssp-demo
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ssp-demo
 spec:
   rules:
-  - host: ssp.DOMAIN
+  - host: ssp.example.com
     http:
       paths:
       - backend:
-          serviceName: ssp-demo
-          servicePort: 8080
+          service:
+            name: ssp-demo
+            port:
+              number: 8080

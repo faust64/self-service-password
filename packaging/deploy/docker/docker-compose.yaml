@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  ssp:
+    build:
+      context: ../../../
+      dockerfile: packaging/docker/Dockerfile
+    container_name: self-service-password
+    volumes:
+    - /host/path/to/config.inc.local.php:/var/www/html/ssp/conf/config.inc.local.php:ro

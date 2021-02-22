@@ -5,7 +5,7 @@ metadata:
 spec:
   params:
   - name: dockerfile
-    value: ./packaging/docker/Dockerfile
+    value: ./packaging/docker/Dockerfile-unprivileged
   pipelineRef:
     name: docker-build
   resources:

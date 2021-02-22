@@ -56,14 +56,24 @@ $ rpm --addsign RPMS/noarch/self-service-password*
 # 4 - Docker
 #==============================================================================
 
-From current directory, do:
+Building docker image locally, from current directory, do:
+
 $ docker build -t self-service-password -f ./docker/Dockerfile ../
 $ docker tag -t self-service-password my-local-registry.example.com:5000/my/ssp:tag
 $ docker push my-local-registry.example.com:5000/my/ssp
 
-Using Tekton:
+See packaging/deploy/docker for a sample docker-compose configuration.
+
+# 5 - Kubernetes
+#==============================================================================
+
+Building image using Tekton:
+
+From current directory, do:
 $ for f in ./kubernetes/*.yaml; do
     sed -e 's|BRANCH|master|g' \
 	-e 's|REGISTRY_PREFIX|my-local-registry.infra.svc.cluster.local:5000|' \
 	./kubernetes/$f | kubectl apply -n ci -f-
 done
+
+See packaging/deploy/kubernetes for a sample deployment configuration.

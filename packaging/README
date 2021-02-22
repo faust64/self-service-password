@@ -58,10 +58,12 @@ $ rpm --addsign RPMS/noarch/self-service-password*
 
 From current directory, do:
 $ docker build -t self-service-password -f ./docker/Dockerfile ../
+$ docker tag -t self-service-password my-local-registry.example.com:5000/my/ssp:tag
+$ docker push my-local-registry.example.com:5000/my/ssp
 
 Using Tekton:
 $ for f in ./kubernetes/*.yaml; do
-    sed -e 's|NAMESPACE|ci|g' -e 's|BRANCH|master|g' \
-	-e 's|REGISTRY|my-local-registry.infra.svc.cluster.local:5000|' \
+    sed -e 's|BRANCH|master|g' \
+	-e 's|REGISTRY_PREFIX|my-local-registry.infra.svc.cluster.local:5000|' \
 	./kubernetes/$f | kubectl apply -n ci -f-
 done

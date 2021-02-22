@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: self-service-password-BRANCH-1
+spec:
+  params:
+  - name: dockerfile
+    value: ./packaging/docker/Dockerfile
+  pipelineRef:
+    name: docker-build
+  resources:
+  - name: app-git
+    resourceRef:
+      name: self-service-password-worteks-BRANCH-git
+  - name: app-image
+    resourceRef:
+      name: self-service-password-BRANCH-image
+  serviceAccountName: tkn-ci
+  timeout: 1h0m0s

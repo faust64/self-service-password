@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: self-service-password-worteks-BRANCH-git
+spec:
+  params:
+  - name: url
+    value: https://github.com/ltb-project/self-service-password
+  - name: revision
+    value: BRANCH
+  type: git

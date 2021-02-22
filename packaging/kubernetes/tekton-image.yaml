@@ -1,0 +1,9 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: self-service-password-BRANCH-image
+spec:
+  params:
+  - name: url
+    value: REGISTRY_PREFIX/self-service-password:BRANCH
+  type: image

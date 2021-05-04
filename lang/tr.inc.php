@@ -127,7 +127,7 @@ $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">SSH Anahtarın
 $messages['sshkeychanged'] = "SSH Anahtarınız değiştirildi";
 $messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH Anahtarı gerekiyor";
-$messages['invalidsskey'] = "Input SSH Key looks invalid";
+$messages['invalidsshkey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "SSH Anahtarınız değiştirildi";
 $messages['sshkey'] = "SSH Anahtarı";
 $messages['emptysshkeychangeform'] = "SSH Anahtarınızı Değiştirin";

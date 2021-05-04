@@ -127,7 +127,7 @@ $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Changez votre 
 $messages['sshkeychanged'] = "Votre clé SSH a été modifiée";
 $messages['nosshkeyschanged'] = "Ces clés sont déjà connues de l'annuaires";
 $messages['sshkeyrequired'] = "La clé SSH est requise";
-$messages['invalidsskey'] = "Cette clé SSH ne semble pas valide";
+$messages['invalidsshkey'] = "Cette clé SSH ne semble pas valide";
 $messages['changesshkeysubject'] = "Votre clé SSH a été modifiée";
 $messages['sshkey'] = "Clé SSH";
 $messages['emptysshkeychangeform'] = "Changez votre clé SSH";

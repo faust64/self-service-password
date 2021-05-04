@@ -127,7 +127,7 @@ $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Zmena SSH kľ�
 $messages['sshkeychanged'] = "Váš SSH kľúč bol zmenený";
 $messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH kľúč je vyžadované";
-$messages['invalidsskey'] = "Input SSH Key looks invalid";
+$messages['invalidsshkey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "Váš SSH kľúč bol zmenený";
 $messages['sshkey'] = "SSH kľúč";
 $messages['emptysshkeychangeform'] = "Zmeňte svoj SSH kľúč";

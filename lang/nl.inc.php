@@ -129,7 +129,7 @@ $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Wijzig uw SSH 
 $messages['sshkeychanged'] = "Uw SSH sleutel is gewijzigd";
 $messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH sleutel is nodig";
-$messages['invalidsskey'] = "Input SSH Key looks invalid";
+$messages['invalidsshkey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "Uw SSH sleutel is gewijzigd";
 $messages['sshkey'] = "SSH sleutel";
 $messages['emptysshkeychangeform'] = "Verander uw SSH sleutel";

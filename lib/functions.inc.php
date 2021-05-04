@@ -527,7 +527,11 @@ function change_password( $ldap, $dn, $password, $ad_mode, $ad_options, $samba_m
 function check_sshkey ( $sshkey, $valid_types ) {
 
     $keys = explode("\n", $sshkey);
+    $found = 0;
     for ($c = 0; $c < count($keys); $c++) {
+	if (preg_match('/^[ \t]*$/', $keys[$c])) {
+	    continue;
+	}
 	$key_parts = preg_split('/[\s]+/', $keys[$c]);
 
 	if (count($key_parts) < 2) {
@@ -555,9 +559,10 @@ function check_sshkey ( $sshkey, $valid_types ) {
 	if ((string) $check !== (string) $algorithm) {
 	    return false;
 	}
+	$found++
     }
 
-    return true;
+    return $found > 0 ? true : false;
 }
 
 # Change sshPublicKey attribute
@@ -578,6 +583,9 @@ function change_sshkey( $ldap, $dn, $attribute, $sshkey ) {
         error_log("LDAP - Modify $attribute error $errno (".ldap_error($ldap).")");
     } else {
 	for ($c = 1; $c < count($keys); $c++) {
+	    if (preg_match('/^[ \t]*$/', $keys[$c])) {
+		continue;
+	    }
 	    $userdata[$attribute] = $keys[$c];
 	    $add = ldap_mod_add($ldap, $dn, $userdata);
 	    $errno = ldap_errno($ldap);

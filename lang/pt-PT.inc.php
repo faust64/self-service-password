@@ -125,6 +125,7 @@ $messages['changesshkeymessage'] = "Hello {login},\n\nYour SSH Key has been chan
 $messages['menusshkey'] = "Chave SSH";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Alterar a chave SSH</a>";
 $messages['sshkeychanged'] = "Sua chave SSH foi alterada";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "A chave SSH é necessária";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "Sua chave SSH foi alterada";

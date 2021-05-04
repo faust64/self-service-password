@@ -129,6 +129,7 @@ $messages['changesshkeyhelp'] = "Zadejte heslo a nové SSH klíč.";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Změňte svůj SSH klíč</a>";
 $messages['changesshkeysubject'] = "Váš SSH klíč byl změněn";
 $messages['sshkeychanged'] = "Váš SSH klíč byl změněn";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyerror'] = "SSH klíč byl odmítnut v adresáři LDAP";
 $messages['sshkey'] = "SSH klíč";
 $messages['menusshkey'] = "SSH klíč";

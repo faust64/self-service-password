@@ -130,6 +130,7 @@ $messages['sshkeyrequired'] = "SSH-Schlüssel ist erforderlich";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";
 $messages['sshkey'] = "SSH Schlüssel";
 $messages['sshkeychanged'] = "Ihr SSH Key wurde geändert";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['emptysshkeychangeform'] = "Ändern Sie Ihren SSH-Schlüssel";
 $messages['changesshkeymessage'] = "Hallo {login}, \n\nDer SSH-Schlüssel wurde geändert.\n\nWenn Sie diese Änderung nicht eingeleitet haben, wenden Sie sich bitte umgehend an Ihren Administrator.";
 $messages['menusshkey'] = "SSH Schlüssel";

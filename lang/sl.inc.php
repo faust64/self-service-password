@@ -125,6 +125,7 @@ $messages['changesshkeymessage'] = "Pozdravljeni {login}, \n\nKo SSH ključ je b
 $messages['menusshkey'] = "SSH ključ";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Spreminjanje SSH Key</a>";
 $messages['sshkeychanged'] = "Vaš SSH ključ je bil spremenjen";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH ključ je potreben";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "Vaš SSH ključ je bil spremenjen";

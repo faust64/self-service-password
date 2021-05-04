@@ -33,6 +33,7 @@ $messages['newpasswordrequired'] = "請輸入新密碼";
 $messages['confirmpasswordrequired'] = "請確認您的新密碼";
 $messages['passwordchanged'] = "您的密碼已修改完成";
 $messages['sshkeychanged'] = "您的 SSH 金鑰已修改完成";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['nomatch'] = "密碼不符";
 $messages['badcredentials'] = "帳號或密碼不正確";
 $messages['passworderror'] = "密碼被 LDAP 伺服器拒絶";

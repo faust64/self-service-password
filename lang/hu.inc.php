@@ -125,6 +125,7 @@ $messages['changesshkeymessage'] = "Tisztelt {login}, \n\nA SSH kulcs megváltoz
 $messages['menusshkey'] = "SSH kulcs";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Változasd meg SSH kulcsot</a>";
 $messages['sshkeychanged'] = "Az SSH kulcs megváltozott";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH kulcs szükséges";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "Az SSH kulcs megváltozott";

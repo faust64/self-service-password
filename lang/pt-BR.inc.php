@@ -33,6 +33,7 @@ $messages['newpasswordrequired'] = "A nova senha é necessária";
 $messages['confirmpasswordrequired'] = "Confirme a nova senha";
 $messages['passwordchanged'] = "A senha foi alterada";
 $messages['sshkeychanged'] = "Sua chave SSH foi alterada";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['nomatch'] = "As senhas não coincidem";
 $messages['badcredentials'] = "Nome de usuário ou senha incorretos";
 $messages['passworderror'] = "A senha foi recusada pelo Diretório LDAP";

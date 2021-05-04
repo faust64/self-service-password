@@ -131,6 +131,7 @@ $messages['changesshkeysubject'] = "La seva clau de SSH s'ha canviat";
 $messages['emptysshkeychangeform'] = "Canviar la clau d'SSH";
 $messages['sshkey'] = "claus SSH";
 $messages['sshkeychanged'] = "La seva clau de SSH es va canviar";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyerror'] = "SSH Key was refused by the LDAP directory";
 $messages['menusshkey'] = "claus SSH";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">Canviar la clau d'SSH</a>";

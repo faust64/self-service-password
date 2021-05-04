@@ -112,6 +112,24 @@ if ( $result === "" ) {
         error_log("LDAP - User $login not found");
     } else {
 
+    # Checks for Existing SSH Keys
+    $currentKeys = ldap_get_values($ldap, $entry, $change_sshkey_attribute);
+    $postedKeys = explode('\n', $sshkey);
+    $matches = 0;
+    for ($x = 0; $x < $currentKeys["count"]; $x++) {
+	$has = preg_split('/[\s]+/', $currentKey[$x]);
+	for ($y = 0; $y < count($postedKeys); $y++) {
+	    $wants = preg_split('/[\s]+/', $postedKey[$y]);
+	    if ($has[0] == $wants[0] && $has[1] == $wants[1]) {
+		$matches = 1;
+		break;
+	    }
+	}
+    }
+    if ($matches == count($postedKeys)) {
+	$result = "nosshkeyschanged";
+    } else {
+
     # Get user email for notification
     if ( $notify_on_sshkey_change ) {
         $mailValues = ldap_get_values($ldap, $entry, $mail_attribute);
@@ -135,7 +153,7 @@ if ( $result === "" ) {
         $bind = ldap_bind($ldap, $ldap_binddn, $ldap_bindpw);
     }
 
-    }}}}}
+    }}}}}}
 
 }
 
@@ -150,7 +168,7 @@ if ( $result === "" ) {
 #==============================================================================
 # Notify password change
 #==============================================================================
-if ($mail and $notify_on_sshkey_change) {
+if ($result === "sshkeychanged" and $mail and $notify_on_sshkey_change) {
     $data = array( "login" => $login, "mail" => $mail, "sshkey" => $sshkey);
     if ( !send_mail($mailer, $mail, $mail_from, $mail_from_name, $messages["changesshkeysubject"], $messages["changesshkeymessage"].$mail_signature, $data) ) {
         error_log("Error while sending change email to $mail (user $login)");

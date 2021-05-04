@@ -33,6 +33,7 @@ $messages['newpasswordrequired'] = "Potrebna je Vaša nova lozinka";
 $messages['confirmpasswordrequired'] = "Molim Vas potvrdite Vašu novu lozinku";
 $messages['passwordchanged'] = "Vaša lozinka je izmenjena";
 $messages['sshkeychanged'] = "Vaš SSH ključ je izmenjen";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['nomatch'] = "Ne poklapaju se lozinke";
 $messages['badcredentials'] = "Korisničko ime ili lozinka su netačni";
 $messages['passworderror'] = "Lozinka odbijena od strane LDAP direktorijuma";

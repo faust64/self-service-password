@@ -126,6 +126,7 @@ $messages['changesshkeymessage'] = "Kaixo {login}, \n\nZure SSH gakoa aldatu da.
 $messages['menusshkey'] = "SSH gakoa";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">SSH gakoa aldatu</a>";
 $messages['sshkeychanged'] = "SSH gakoa aldatu da";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyrequired'] = "SSH gakoa beharrezkoa da";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";
 $messages['changesshkeysubject'] = "SSH gakoa aldatu da";

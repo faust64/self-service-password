@@ -33,6 +33,7 @@ $messages['newpasswordrequired'] = "Your new password is required";
 $messages['confirmpasswordrequired'] = "Please confirm your new password";
 $messages['passwordchanged'] = "Your password was changed";
 $messages['sshkeychanged'] = "Your SSH Key was changed";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['nomatch'] = "Passwords mismatch";
 $messages['badcredentials'] = "Login or password incorrect";
 $messages['passworderror'] = "Password was refused by the LDAP directory";

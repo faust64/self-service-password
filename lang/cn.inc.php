@@ -127,6 +127,7 @@ $messages['sshkey'] = "SSH密钥";
 $messages['changehelpsshkey'] = "<a href=\"?action=changesshkey\">更改SSH密钥</a>";
 $messages['emptysshkeychangeform'] = "更改SSH密钥";
 $messages['sshkeychanged'] = "您的SSH密钥已更改";
+$messages['nosshkeyschanged'] = "Input matches what is currently written in directory";
 $messages['sshkeyerror'] = "LDAP目录拒绝了SSH密钥";
 $messages['sshkeyrequired'] = "需要SSH密钥";
 $messages['invalidsskey'] = "Input SSH Key looks invalid";

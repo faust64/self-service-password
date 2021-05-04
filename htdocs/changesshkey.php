@@ -113,7 +113,7 @@ if ( $result === "" ) {
     } else {
 
     # Checks for Existing SSH Keys
-    $currentKeys = ldap_get_values($ldap, $entry, $change_sshkey_attribute);
+    $currentKeys = ldap_get_values($ldap, $entry, $sshkey_attribute);
     $postedKeys = explode('\n', $sshkey);
     $matches = 0;
     for ($x = 0; $x < $currentKeys["count"]; $x++) {
@@ -162,7 +162,7 @@ if ( $result === "" ) {
 # Change sshPublicKey
 #==============================================================================
 if ( $result === "" ) {
-    $result = change_sshkey($ldap, $userdn, $change_sshkey_attribute, $sshkey);
+    $result = change_sshkey($ldap, $userdn, $sshkey_attribute, $sshkey);
 }
 
 #==============================================================================

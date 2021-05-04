@@ -166,7 +166,7 @@ $use_change = true;
 $change_sshkey = false;
 
 # What attribute should be changed by the changesshkey action?
-$change_sshkey_attribute = "sshPublicKey";
+$sshkey_attribute = "sshPublicKey";
 
 # Ensure the SSH Key submitted uses a type we trust
 $ssh_valid_key_types = array('ssh-rsa', 'ssh-dss', 'ecdsa-sha2-nistp256', 'ssh-ed25519');

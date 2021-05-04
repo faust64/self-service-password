@@ -526,7 +526,7 @@ function change_password( $ldap, $dn, $password, $ad_mode, $ad_options, $samba_m
  */
 function check_sshkey ( $sshkey, $valid_types ) {
 
-    $keys = explode("\n", $sshkey);
+    $keys = preg_split('/\n|\r\n?/', $sshkey);
     $found = 0;
     for ($c = 0; $c < count($keys); $c++) {
 	if (preg_match('/^[ \t]*$/', $keys[$c])) {
@@ -570,7 +570,7 @@ function check_sshkey ( $sshkey, $valid_types ) {
 function change_sshkey( $ldap, $dn, $attribute, $sshkey ) {
 
     $result = "";
-    $keys = explode("\n", $sshkey);
+    $keys = preg_split('/\n|\r\n?/', $sshkey);
     $userdata[$attribute] = $keys[0];
 
     # Commit modification on directory

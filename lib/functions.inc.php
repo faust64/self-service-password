@@ -559,7 +559,7 @@ function check_sshkey ( $sshkey, $valid_types ) {
 	if ((string) $check !== (string) $algorithm) {
 	    return false;
 	}
-	$found++
+	$found++;
     }
 
     return $found > 0 ? true : false;

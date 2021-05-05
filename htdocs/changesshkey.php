@@ -121,7 +121,7 @@ if ( $result === "" ) {
 	for ($y = 0; $y < count($postedKeys); $y++) {
 	    $wants = preg_split('/[\s]+/', $postedKey[$y]);
 	    if ($has[0] == $wants[0] && $has[1] == $wants[1]) {
-		$matches = 1;
+		$matches++;
 		break;
 	    }
 	}
